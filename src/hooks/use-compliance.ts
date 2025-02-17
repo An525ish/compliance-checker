@@ -69,20 +69,27 @@ export function useCompliance() {
 
   const autoFix = useCallback(async (checkId: string) => {
     try {
+      console.log(`Applying fix for ${checkId}...`);
       const result = await fetch(`/api/compliance/fix/${checkId}`, {
         method: 'POST'
-      })
+      });
+      
+      const data = await result.json();
       
       if (!result.ok) {
-        throw new Error('Failed to apply fix')
+        console.error(`Fix failed:`, data);
+        throw new Error(data.error || 'Failed to apply fix');
       }
 
-      toast.success('Fix applied successfully')
-      // Re-run the specific check
-      await runCheck(checkId)
+      console.log(`Fix applied:`, data);
+      toast.success(`${checkId.toUpperCase()} fix applied successfully`);
+      
+      // Re-run the check to verify the fix
+      await runCheck(checkId);
     } catch (error) {
-      toast.error('Failed to apply fix')
-      throw error
+      console.error(`Fix error:`, error);
+      toast.error(`Failed to apply ${checkId.toUpperCase()} fix`);
+      throw error;
     }
   }, [runCheck])
 
