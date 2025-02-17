@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Delve Compliance Checker
 
-## Getting Started
+A modern, full-stack application built with Next.js 14 to monitor and manage Supabase configuration compliance. This tool helps ensure your Supabase instance follows security best practices by checking Multi-Factor Authentication (MFA), Row Level Security (RLS), and Point in Time Recovery (PITR) configurations.
 
-First, run the development server:
+## Features
 
+- 🔒 **Security Compliance Checks**
+  - MFA status monitoring for all users
+  - RLS configuration verification
+  - PITR backup status tracking
+
+- 🎯 **Real-time Monitoring**
+  - Instant compliance status updates
+  - Detailed status reporting
+  - Historical compliance tracking
+
+- 🛠 **Automated Fixes**
+  - One-click compliance issue resolution
+  - Automatic configuration updates
+  - Validation after fixes
+
+- 💻 **Modern Tech Stack**
+  - Next.js 14 (App Router)
+  - TypeScript
+  - Supabase
+  - Tailwind CSS
+  - Shadcn/UI
+
+## Prerequisites
+
+- Node.js 18.x or higher
+- npm or yarn
+- Supabase account and project
+
+## Installation
+
+1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/an525ish/compliance-checker.git
+cd compliance-checker
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Fill in your Supabase credentials:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
 
-## Learn More
+4. Set up the database
+```sql
+-- Run the SQL setup scripts provided in /database/setup.sql
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. Start the development server
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Database Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Create required tables and functions:
+```sql
+-- Enable extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-## Deploy on Vercel
+-- Create users table
+CREATE TABLE IF NOT EXISTS public.users (
+    id UUID PRIMARY KEY REFERENCES auth.users(id),
+    email TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    mfa_enabled BOOLEAN DEFAULT false
+);
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-- Additional setup SQL provided in /database/setup.sql
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Configure RLS policies as needed
+
+## Usage
+
+1. Access the application at `http://localhost:3000`
+2. Log in with your Supabase credentials
+3. Navigate to the Compliance Dashboard
+4. Run compliance checks using the provided buttons
+5. View detailed reports and fix any issues
+```
+
+## Screenshots
+
+<img width="1510" alt="Image" src="https://github.com/user-attachments/assets/9a41646c-2207-4c07-ae36-f1676f0a0900" />
